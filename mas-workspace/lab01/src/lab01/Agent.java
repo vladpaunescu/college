@@ -9,6 +9,7 @@ public class Agent {
 	Random rand;
 	
 	
+	
 	public Agent(Board b){
 		board = b;
 		totalScore = 0;
