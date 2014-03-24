@@ -30,43 +30,43 @@ public class CognitiveAgent {
 	}
 	
 	public void play(){
-		while(true){
-			updateMemory(position, Board.FREE);
-			if (board.hasObject(position)){
-				totalScore += board.collectObject(position);
-			}
-			
-			Orientation orient = board.getAgentOrientation();
-
-			if(board.isFreeForward(position, orient)){
-				totalScore += board.moveAgentForward(orient);
-				position = position.getNext(orient);
-			} else {
-				Coordinates forward = position.getNext(orient);
-				if(properCoordinate(forward))
-					updateMemory(forward, Board.OBSTACLE);
-				
-				int dir = rand.nextInt(2);
-				if(dir==1){
-					totalScore += board.turnLeft();
-				}
-				else{
-					totalScore += board.turnRight();
-				}
-			}
-			
-			System.out.println(totalScore);
-			
-			board.draw();
-			showMemory();
-			
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		while(true){
+//			updateMemory(position, Board.FREE);
+//			if (board.hasObject(position)){
+//				totalScore += board.collectObject(position);
+//			}
+//			
+//			Orientation orient = board.getAgentOrientation();
+//
+//			if(board.isFreeForward(position, orient)){
+//				totalScore += board.moveAgentForward(orient);
+//				position = position.getNext(orient);
+//			} else {
+//				Coordinates forward = position.getNext(orient);
+//				if(properCoordinate(forward))
+//					updateMemory(forward, Board.OBSTACLE);
+//				
+//				int dir = rand.nextInt(2);
+//				if(dir==1){
+//					totalScore += board.turnLeft();
+//				}
+//				else{
+//					totalScore += board.turnRight();
+//				}
+//			}
+//			
+//			System.out.println(totalScore);
+//			
+//			board.draw();
+//			showMemory();
+//			
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		
 	}
 	

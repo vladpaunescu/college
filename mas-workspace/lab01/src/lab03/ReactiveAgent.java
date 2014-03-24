@@ -1,56 +1,60 @@
 package lab03;
 
+import java.awt.Color;
 import java.util.Random;
 
-import lab01.Board;
-import lab01.Coordinates;
-import lab01.Orientation;
 
-public class ReactiveAgent implements Agent{
+public class ReactiveAgent extends Agent{
 
-	Board board;
-	int totalScore;
+	public static Color AGENT_COLOR = new Color(0, 120, 255);
+	
 	Random rand;
 	
-	Coordinates position;
-	Orientation orientation;
-	
-	public ReactiveAgent(Board b, Coordinates pos){
-		board = b;
+
+
+	public ReactiveAgent(Board b, Coordinates pos, Orientation orient){
+		super(b, pos, orient);
 		totalScore = 0;
 		rand = new Random();
-		position = pos;
 	}
-	
+
 	public Action play(){
-			if (board.hasObject(position)){
-				totalScore += board.collectObject(position);
-			}
-			if(board.isFreeForward(position, orientation)){
-				totalScore += board.moveAgentForward(orient);
-			} else {
-				int dir = rand.nextInt(2);
-				if(dir==1){
-					System.out.println("Turn Left");
-					totalScore += board.turnLeft();
-				}
-				else{
-					System.out.println("Turn Right");
-					totalScore += board.turnRight();
-				}
-			}
-			System.out.println(totalScore);
-			board.draw();
-			
+
+		if (board.hasObject(position)){
+			Action action = new CollectAction();
+			return action;
+		}
 		
+		if (board.hasObjectForward(position, orientation)){
+			Action action = new MoveForwardAction();
+			return action;
+		}
 		
+		Orientation orient = board.getSurroundingObject(orientation, position);
+		if (orient != null){
+			Action action = new TurnAction(orient);
+			return action;
+		}
+		
+		if(board.isFreeForward(position, orientation)){
+			Action action = new MoveForwardAction();
+			return action;
+		} 
+
+		int dir = rand.nextInt(2);
+		if(dir==1){
+			Action action = new TurnAction(Orientation.WEST);
+			return action;
+		}
+		
+		Action action = new TurnAction(Orientation.EAST);
+		return action;
+
 	}
-	
-	public static void main(String[] args){
-		Board board = new Board(10,10, 10);
-		board.generate();
-		ReactiveAgent agent = new ReactiveAgent(board);
-		agent.play();
+
+	@Override
+	public Color getColor() {
+		return AGENT_COLOR;
 	}
 
 }

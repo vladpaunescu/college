@@ -4,32 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 public class Board {
-	
+
 	public static int FREE = 0;
 	public static int OBJECT = 1;
 	public static int OBSTACLE = 2;
-	
-	public static int MAX_SIDE = 100;
+
+	public static int MAX_SIDE = 20;
 	public static char MAP[] = {'-','*', '#'};
 
 	public int side;
 	public int maxObjectCount[];
-	
+
 	private int _board[][];
 
 	private int objectCounts[];
-	
+
 	private Random _rand;
 	private Coordinates _agentPosition; 
 	private Orientation _agentOrientation;
-	
+
 	private List<Agent> _agents;
 
 	public Board(int n){
 		side = n;
 		maxObjectCount = new int[3];
-		maxObjectCount[OBJECT] = n;
+		maxObjectCount[OBJECT] = n*n/3;
 		maxObjectCount[OBSTACLE] = n;
 		_board = new int[n][n];
 		objectCounts = new int[3];
@@ -39,21 +40,27 @@ public class Board {
 		_agents = new ArrayList<>();
 
 	}
-	
+
 	public void addAgent(Agent a){
 		_agents.add(a);
 	}
-	
+
 	public void play(){
 		for(Agent a : _agents){
 			Action action = a.play();
-			applyAction(action);
+			action.execute(new Context(a));
 		}
 	}
+
 
 	public void generate(){
 		for(int i = 0; i < side; i++){
 			for(int j = 0; j < side; j++){
+				if (onCorner(i, j)){
+					_board[i][j] = FREE;
+					continue;
+				}
+
 				int type;
 				if(obstaclesAround(i,j)){
 					if(objectCounts[OBJECT] < maxObjectCount[OBJECT]){
@@ -61,18 +68,40 @@ public class Board {
 						++objectCounts[type];
 					}
 					else type = FREE;
-				
+
 				} else {
-					do {
-						type =_rand.nextInt(3);
+					int count = 1;
+					if(objectCounts[OBJECT] < maxObjectCount[OBJECT]) {
+						count++;
 					}
-					while(objectCounts[type] > maxObjectCount[type]);
+
+					if(objectCounts[OBSTACLE] < maxObjectCount[OBSTACLE]) {
+						count++;
+					}
+					type =_rand.nextInt(count);
+					if(type == 1){
+						if (objectCounts[OBJECT] > maxObjectCount[OBJECT]){
+							type++;
+						}
+					}
+					objectCounts[type]++;
 				}
 				_board[i][j] = type;
 			}
 		}
 
-		_board[0][0] = FREE; // start position is free
+	}
+	
+	public List<Agent> getAgents() {
+		return _agents;
+	}
+
+
+	private boolean onCorner(int i, int j){
+		return i == 0 && j == 0 ||
+				i == side - 1 && j == 0 ||
+				i == 0 && j == side - 1 ||
+				i == side - 1 && j == side - 1;
 	}
 
 	private boolean obstaclesAround(int i, int j){
@@ -98,7 +127,7 @@ public class Board {
 					else if(_agentOrientation == Orientation.NORTH)
 						sb.append("^");
 				} else sb.append(MAP[_board[i][j]]);
-				
+
 			}
 			sb.append("\n");
 		}
@@ -106,19 +135,19 @@ public class Board {
 	}
 
 
-	public static void main(String[] args){
-		Board board = new Board(10);
-		board.generate();
-		board.draw();
-	}
-
-	public Coordinates getAgentPosition() {
-		return _agentPosition;
-	}
 
 	public boolean hasObject(Coordinates c) {
 		return _board[c.y][c.x] == OBJECT;
 	}
+
+	public boolean hasObstacle(Coordinates c) {
+		return _board[c.y][c.x] == OBSTACLE;
+	}
+
+	public int getWidth() {
+		return side;
+	}
+
 
 	public int collectObject(Coordinates c) {
 		if (_board[c.y][c.x] == OBJECT){
@@ -126,10 +155,6 @@ public class Board {
 			return 100;
 		}
 		return -1;
-	}
-
-	public Orientation getAgentOrientation(){
-		return _agentOrientation;
 	}
 
 	public boolean isFreeForward(Coordinates c, Orientation orient) {
@@ -162,71 +187,73 @@ public class Board {
 		}
 		return false;
 	}
-
-	public int moveAgentForward(Orientation orient) {
-
-		if(orient == Orientation.NORTH){
-			_agentPosition.y--;
-		}
-
-		if(orient == Orientation.EAST){
-			_agentPosition.x++;
-		}
-
-		if(orient == Orientation.SOUTH){
-			_agentPosition.y++;
-		}
-
-		if(orient == Orientation.WEST){
-			_agentPosition.x--;
-		}
-		
-		return -1;
-	}
-
-	public int turnLeft() {
-		if(_agentOrientation == Orientation.NORTH){
-			_agentOrientation = Orientation.WEST;
-		}
-		
-		else if(_agentOrientation == Orientation.EAST){
-			_agentOrientation = Orientation.NORTH;
-		}
-		
-		else if(_agentOrientation == Orientation.SOUTH){
-			_agentOrientation = Orientation.EAST;
-		}
-		
-		else if(_agentOrientation == Orientation.WEST){
-			_agentOrientation = Orientation.SOUTH;
-		}
-		
-		return -1;
-	}
 	
-	public int turnRight() {
-		if(_agentOrientation == Orientation.NORTH){
-			_agentOrientation = Orientation.EAST;
+	public boolean hasObjectForward(Coordinates position,
+			Orientation orientation) {
+		if(orientation == Orientation.NORTH){
+			if (position.y > 0){
+				return _board[position.y-1][position.x] == OBJECT;
+			}
+			return false;
 		}
-		
-		else if(_agentOrientation == Orientation.EAST){
-			_agentOrientation = Orientation.SOUTH;
+
+		if(orientation == Orientation.EAST){
+			if (position.x < side - 1){
+				return _board[position.y][position.x + 1] == OBJECT;
+			}
+			return false;
 		}
-		
-		else if(_agentOrientation == Orientation.SOUTH){
-			_agentOrientation = Orientation.WEST;
+
+		if(orientation == Orientation.SOUTH){
+			if (position.y < side - 1){
+				return _board[position.y + 1][position.x] == OBJECT;
+			}
+			return false;
 		}
-		
-		else if(_agentOrientation == Orientation.WEST){
-			_agentOrientation = Orientation.NORTH;
+
+		if(orientation == Orientation.WEST){
+			if (position.x > 0){
+				return _board[position.y][position.x - 1] == OBJECT;
+			}
+			return false;
 		}
-		
-		return -1;
+		return false;
 	}
 
-	public int getCurrentLocation(Coordinates position) {
-		return _board[position.y][position.x];
+	
+	public Orientation getSurroundingObject(Orientation orientation, Coordinates position) {
+		if (position.y > 0 && _board[position.y-1][position.x]  == OBJECT){
+			if (orientation == Orientation.EAST){
+				return Orientation.WEST;
+			}
+			return Orientation.EAST;
+		}
+		
+		if (position.x > 0 && _board[position.y][position.x - 1]  == OBJECT){
+			if (orientation == Orientation.NORTH){
+				return Orientation.WEST;
+			}
+			return Orientation.EAST;
+		}
+		
+		if (position.y < side - 1 && _board[position.y + 1][position.x]  == OBJECT){
+			if (orientation == Orientation.EAST){
+				return Orientation.EAST;
+			}
+			return Orientation.WEST;
+		}
+		
+		if (position.x < side - 1 && _board[position.y][position.x + 1]  == OBJECT){
+			if (orientation == Orientation.NORTH){
+				return Orientation.EAST;
+			}
+			return Orientation.WEST;
+		}
+		
+		return null;
 	}
 
+	
+	
 
 }
