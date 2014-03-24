@@ -12,20 +12,21 @@ public class ReactiveAgent implements Agent{
 	int totalScore;
 	Random rand;
 	
+	Coordinates position;
+	Orientation orientation;
 	
-	public ReactiveAgent(Board b){
+	public ReactiveAgent(Board b, Coordinates pos){
 		board = b;
 		totalScore = 0;
 		rand = new Random();
+		position = pos;
 	}
 	
-	public void play(){
-			Coordinates c = board.getAgentPosition(this);
-			if (board.hasObject(c)){
-				totalScore += board.collectObject(c);
+	public Action play(){
+			if (board.hasObject(position)){
+				totalScore += board.collectObject(position);
 			}
-			Orientation orient = board.getAgentOrientation();
-			if(board.isFreeForward(c, orient)){
+			if(board.isFreeForward(position, orientation)){
 				totalScore += board.moveAgentForward(orient);
 			} else {
 				int dir = rand.nextInt(2);

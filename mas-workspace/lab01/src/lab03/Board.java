@@ -50,7 +50,6 @@ public class Board {
 			applyAction(action);
 		}
 	}
-	
 
 	public void generate(){
 		for(int i = 0; i < side; i++){
