@@ -7,9 +7,11 @@ import java.util.Random;
 
 public class Board {
 
+	public static int UNKNOWN = -1;
 	public static int FREE = 0;
 	public static int OBJECT = 1;
 	public static int OBSTACLE = 2;
+	
 
 	public static int MAX_SIDE = 20;
 	public static char MAP[] = {'-','*', '#'};
@@ -50,6 +52,7 @@ public class Board {
 			Action action = a.play();
 			action.execute(new Context(a));
 		}
+		
 	}
 
 
@@ -152,7 +155,7 @@ public class Board {
 	public int collectObject(Coordinates c) {
 		if (_board[c.y][c.x] == OBJECT){
 			_board[c.y][c.x] = FREE;
-			return 100;
+			return 10;
 		}
 		return -1;
 	}
@@ -251,6 +254,31 @@ public class Board {
 		}
 		
 		return null;
+	}
+
+	public int[][] getSurroundingObjectsAt2(Coordinates position) {
+		int objects[][] = new int[5][5];
+		for(int i = 0; i < 5; i++){
+			for (int j = 0; j < 5; j++){
+				if(Math.abs(i-2) + Math.abs(j - 2) <= 2){
+					if(position.y + i - 2 >= 0 && position.y + i - 2 < side &&
+							position.x + j - 2 >= 0 && position.x + j - 2 < side)
+					objects[i][j] = _board[position.y + i - 2][position.x + j - 2];
+				}
+				else {
+					objects[i][j] = UNKNOWN;
+				}
+			}
+		}
+		
+		for(int i = 0; i < 5; ++i){
+			for(int j = 0; j < 5; ++j){
+				System.out.print(objects[i][j] + " ");
+			}
+			System.out.println();
+		}
+		
+		return objects;
 	}
 
 	

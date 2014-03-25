@@ -7,11 +7,8 @@ import java.util.Random;
 public class ReactiveAgent extends Agent{
 
 	public static Color AGENT_COLOR = new Color(0, 120, 255);
-	
 	Random rand;
 	
-
-
 	public ReactiveAgent(Board b, Coordinates pos, Orientation orient){
 		super(b, pos, orient);
 		totalScore = 0;

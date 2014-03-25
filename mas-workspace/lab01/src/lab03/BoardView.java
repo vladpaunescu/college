@@ -94,6 +94,7 @@ public class BoardView extends JPanel {
 			g2.fill(new Polygon(xpoints, ypoints, 3));
 			g2.setColor(Color.BLACK);
 			g2.draw(new Polygon(xpoints, ypoints, 3));
+			g2.drawString(a.totalScore + "", (int) (left + width/2), (int) (top + height / 2));
 		}
 	}
 
@@ -107,9 +108,9 @@ public class BoardView extends JPanel {
 		Board board = new Board(width);
 		Agent a1 = new ReactiveAgent(board, 
 				new Coordinates(0, 0), Orientation.SOUTH);
-		Agent a2 = new ReactiveAgent(board, 
+		Agent a2 = new CognitiveAgent(board, 
 				new Coordinates(width - 1, 0), Orientation.SOUTH);
-		Agent a3 = new ReactiveAgent(board, 
+		Agent a3 = new CognitiveAgent(board, 
 				new Coordinates(0, width-1), Orientation.NORTH);
 		Agent a4 = new ReactiveAgent(board, 
 				new Coordinates(width - 1, width - 1), Orientation.NORTH);

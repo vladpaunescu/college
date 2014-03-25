@@ -29,8 +29,9 @@ public class Context {
 			agent.position.x--;
 		}
 		
+		agent.totalScore--;
+		
 	}
-	
 
 	public void rotateAgent(Orientation turnDirection) {
 		if (turnDirection == Orientation.EAST){
@@ -40,6 +41,7 @@ public class Context {
 			turnLeft();
 		}
 		
+		agent.totalScore--;
 	}
 	
 	private void turnLeft() {
