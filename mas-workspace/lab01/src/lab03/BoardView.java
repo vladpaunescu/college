@@ -106,19 +106,19 @@ public class BoardView extends JPanel {
 		frame.setLocationRelativeTo(null);
 		int width = 10;
 		Board board = new Board(width);
-		Agent a1 = new ReactiveAgent(board, 
-				new Coordinates(0, 0), Orientation.SOUTH);
+//		Agent a1 = new ReactiveAgent(board, 
+//				new Coordinates(0, 0), Orientation.SOUTH);
 		Agent a2 = new CognitiveAgent(board, 
 				new Coordinates(width - 1, 0), Orientation.SOUTH);
-		Agent a3 = new CognitiveAgent(board, 
-				new Coordinates(0, width-1), Orientation.NORTH);
-		Agent a4 = new ReactiveAgent(board, 
-				new Coordinates(width - 1, width - 1), Orientation.NORTH);
+//		Agent a3 = new CognitiveAgent(board, 
+//				new Coordinates(0, width-1), Orientation.NORTH);
+//		Agent a4 = new ReactiveAgent(board, 
+//				new Coordinates(width - 1, width - 1), Orientation.NORTH);
 		board.generate();
-		board.addAgent(a1);
 		board.addAgent(a2);
-		board.addAgent(a3);
-		board.addAgent(a4);
+//		board.addAgent(a2);
+//		board.addAgent(a3);
+//		board.addAgent(a4);
 
 		frame.add(new BoardView(board));
 		frame.setVisible(true);
