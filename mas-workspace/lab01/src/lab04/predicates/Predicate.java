@@ -1,6 +1,13 @@
 package lab04.predicates;
 
-public abstract class Predicate {
+public interface Predicate {
 	
-	public abstract boolean isValid();
+	boolean isValid();
+
+	String printInfo();
+
+	void invalidate();
+
+	void makeTrue();
+
 }

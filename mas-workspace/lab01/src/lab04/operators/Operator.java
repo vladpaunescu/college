@@ -17,5 +17,21 @@ public abstract class Operator {
 		additions = new LinkedList<>();
 		eliminations = new LinkedList<>();
 	}
-
+	
+	public boolean canApply(){
+		for(Predicate precondition : preconditions){
+			if (!precondition.isValid()) return false;
+		}
+		return true;
+	}
+	
+	public void apply() {
+		for(Predicate elimination : eliminations){
+			elimination.invalidate();
+		}
+		
+		for(Predicate addition : additions){
+			addition.makeTrue();
+		}
+	}
 }

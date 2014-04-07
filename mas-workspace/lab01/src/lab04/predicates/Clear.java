@@ -2,7 +2,7 @@ package lab04.predicates;
 
 import lab04.Block;
 
-public class Clear extends Predicate{
+public class Clear implements Predicate{
 	
 	public Block block;
 	
@@ -17,5 +17,48 @@ public class Clear extends Predicate{
 		}
 		return false;
 	}
+	
+	@Override
+	public void invalidate() {
+		// no op
+	}
 
+	@Override
+	public void makeTrue() {
+		block.setClear();
+	}
+
+	@Override
+	public String printInfo() {
+		if (isValid()) return "Clear(" + block.name + ")";
+		return "NOT Clear(" + block.name + ")";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((block == null) ? 0 : block.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Clear other = (Clear) obj;
+		if (block == null) {
+			if (other.block != null)
+				return false;
+		} else if (!block.equals(other.block))
+			return false;
+		return true;
+	}
+
+	
+	
 }

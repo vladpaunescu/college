@@ -6,7 +6,7 @@ public class Block {
 	public boolean onTable;
 	public Block below;
 	public Block above;
-	public boolean inRobotArm;
+	public boolean shouldClear;
 	
 	public static class Builder{
 		private String name;
@@ -16,10 +16,13 @@ public class Block {
 		
 		public Builder(String n){
 			name = n;
+			onTable = false;
+			above = null;
+			below = null;
 		}
 		
-		public Builder onTable(boolean b){
-			onTable = b;
+		public Builder onTable(){
+			onTable = true;
 			return this;
 		}
 		
@@ -45,12 +48,15 @@ public class Block {
 		this.above = b.above;
 	}
 	
+	
 	public boolean isOnBlock(Block bl){
-		return below.equals(bl);
+		if (below != null)	return below.equals(bl);
+		return false;
 	}
 	
 	public boolean isBelowBlock(Block b){
-		return above.equals(b);
+		if (above != null) return above.equals(b);
+		return false;
 	}
 	
 	public boolean isClear(){
@@ -61,9 +67,6 @@ public class Block {
 		return onTable;
 	}
 	
-	public boolean inRobotArm(){
-		return inRobotArm;
-	}
 	
 	public void setOnTable(){
 		onTable = true;
@@ -81,5 +84,43 @@ public class Block {
 		above = null;
 	}
 
-	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((above == null) ? 0 : above.hashCode());
+		result = prime * result + ((below == null) ? 0 : below.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + (onTable ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Block other = (Block) obj;
+		if (above == null) {
+			if (other.above != null)
+				return false;
+		} else if (!above.equals(other.above))
+			return false;
+		if (below == null) {
+			if (other.below != null)
+				return false;
+		} else if (!below.equals(other.below))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (onTable != other.onTable)
+			return false;
+		return true;
+	}
 }
