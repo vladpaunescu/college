@@ -1,5 +1,6 @@
 package lab04.operators;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,9 +15,9 @@ public abstract class Operator {
 	public List<Predicate> eliminations;
 	
 	public Operator(){
-		preconditions = new LinkedList<>();
-		additions = new LinkedList<>();
-		eliminations = new LinkedList<>();
+		preconditions = new ArrayList<>();
+		additions = new ArrayList<>();
+		eliminations = new ArrayList<>();
 	}
 	
 	public boolean canApply(){

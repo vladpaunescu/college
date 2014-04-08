@@ -1,7 +1,5 @@
 package lab04;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
-
 import lab04.operators.Operator;
 import lab04.predicates.Predicate;
 

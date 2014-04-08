@@ -1,5 +1,6 @@
 package lab04;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Planner {
 
 	private List<ActionState> plan() {
 		// TODO Auto-generated method stub
-		if (stateForwardSearch(beliefState, new LinkedList<State>(), new LinkedList<ActionState>())){
+		if (stateForwardSearch(beliefState, new ArrayList<State>(), new ArrayList<ActionState>())){
 			System.out.println("Plan succeeded");
 			for(ActionState actionState : robotPlan){
 				System.out.println(actionState.state.getStateInfo());
@@ -41,12 +42,13 @@ public class Planner {
 		List<ActionState> allowedActions = getAllowedActions(currentState);
 
 		for(ActionState actionState : allowedActions){
+			System.out.println(actionState.state.getStateInfo());
 			State newState = actionState.applyAction();
-			System.out.println(newState.getStateInfo());
+		//	System.out.println(newState.getStateInfo());
 			if(!visitedStates.contains(newState)){
-				List<State> newVisitedStates = new LinkedList<>(visitedStates);
+				List<State> newVisitedStates = new ArrayList<>(visitedStates);
 				newVisitedStates.add(newState);
-				List<ActionState> newPlan = new LinkedList<>(plan);
+				List<ActionState> newPlan = new ArrayList<>(plan);
 				newPlan.add(actionState);
 				boolean success = stateForwardSearch(newState, newVisitedStates, newPlan);
 				if (success){
@@ -58,15 +60,15 @@ public class Planner {
 	}
 
 	private List<ActionState> getAllowedActions(State currentState) {
-		List<ActionState> actions = new LinkedList<>();
+		List<ActionState> actions = new ArrayList<>();
 
-		for (Block block : beliefState.blocks){
+		for (Block block : currentState.blocks){
 			State pickupState = new State(currentState);
 			PickUp pickup = new PickUp(pickupState.robot, pickupState.getBlockByName(block.name));
 			if(pickup.canApply()){
 				actions.add(new ActionState(pickup, pickupState));
 			}
-
+			
 			State putDownState = new State(currentState);
 			PutDown putDown = new PutDown(putDownState.robot, putDownState.getBlockByName(block.name));
 			if(putDown.canApply()){
@@ -74,14 +76,16 @@ public class Planner {
 			}
 
 			State stackState = new State(currentState);
+			if (stackState.robot.arm!= null)
+				System.out.println("Robot arm " + stackState.robot.arm.name + " " + block.name);
 			StackOp stack = new StackOp(stackState.robot, stackState.robot.arm, stackState.getBlockByName(block.name));
-			if(stack.canApply()){
+			if(stackState.robot.arm != null && !stackState.robot.arm.name.equals(block.name) && stack.canApply()){
 				actions.add(new ActionState(stack, stackState));
 			}
 		}
 
-		for(int i = 0; i < beliefState.blocks.size(); ++i){
-			for (int j = 0; j < beliefState.blocks.size(); ++j){
+		for(int i = 0; i < currentState.blocks.size(); ++i){
+			for (int j = 0; j < currentState.blocks.size(); ++j){
 				if (i != j){
 					State unstackState = new State(currentState);
 					Unstack unstack = new Unstack(unstackState.robot,
@@ -172,11 +176,18 @@ public class Planner {
 //		addPredicate(new On(d1,c1)).
 //		addPredicate(new ArmEmpty(robot1));
 		goalState.
-		addPredicate(new On(c1,a1)).
-		addPredicate(new On(b1,d1)).
-		addPredicate(new OnTable(a1)).
-		addPredicate(new OnTable(d1)).
-		addPredicate(new ArmEmpty(robot2));
+		addPredicate(new On(a1,c1)).
+		addPredicate(new On(d1,b1)).
+		addPredicate(new OnTable(c1)).
+		addPredicate(new OnTable(b1)).
+		addPredicate(new ArmEmpty(robot1));
+//		
+//		State mockState = new State();
+//		mockState.addPredicate(new On(c,a)).
+//		addPredicate(new On(b,d)).
+//		addPredicate(new OnTable(a)).
+//		addPredicate(new OnTable(d)).
+//		addPredicate(new ArmEmpty(robot));
 
 		System.out.println(initialState.getStateInfo());
 		System.out.println(goalState.getStateInfo());
@@ -185,7 +196,7 @@ public class Planner {
 		planner.initialState = initialState;
 		planner.beliefState = beliefState;
 		planner.goalState = goalState;
-
+		//System.out.println(mockState.satisfies(goalState));
 		List<ActionState> ops = planner.plan();
 		System.out.println("Done");
 	}

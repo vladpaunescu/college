@@ -1,5 +1,6 @@
 package lab04;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,8 +19,8 @@ public class State {
 	
 	
 	public State(){
-		predicates = new LinkedList<>();
-		blocks = new LinkedList<>();
+		predicates = new ArrayList<>();
+		blocks = new ArrayList<>();
 		blockMap = new HashMap<>();
 	}
 
