@@ -3,6 +3,7 @@ package lab04.operators;
 import java.util.LinkedList;
 import java.util.List;
 
+import lab04.State;
 import lab04.predicates.Predicate;
 
 public abstract class Operator {
@@ -26,6 +27,7 @@ public abstract class Operator {
 	}
 	
 	public void apply() {
+		
 		for(Predicate elimination : eliminations){
 			elimination.invalidate();
 		}

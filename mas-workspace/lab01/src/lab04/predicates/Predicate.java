@@ -1,5 +1,9 @@
 package lab04.predicates;
 
+import java.util.Map;
+
+import lab04.Block;
+
 public interface Predicate {
 	
 	boolean isValid();
@@ -9,5 +13,7 @@ public interface Predicate {
 	void invalidate();
 
 	void makeTrue();
+
+	Predicate clone(Map<String, Block> blockMap);
 
 }

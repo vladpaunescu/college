@@ -1,5 +1,7 @@
 package lab04.predicates;
 
+import java.util.Map;
+
 import lab04.Block;
 
 public class Clear implements Predicate{
@@ -26,6 +28,11 @@ public class Clear implements Predicate{
 	@Override
 	public void makeTrue() {
 		block.setClear();
+	}
+	
+	@Override
+	public Predicate clone(Map<String, Block> blockMap) {
+		return new Clear(blockMap.get(block.name));
 	}
 
 	@Override

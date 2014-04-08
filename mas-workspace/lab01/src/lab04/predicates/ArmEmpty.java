@@ -1,5 +1,8 @@
 package lab04.predicates;
 
+import java.util.Map;
+
+import lab04.Block;
 import lab04.Robot;
 
 public class ArmEmpty implements Predicate{
@@ -28,13 +31,18 @@ public class ArmEmpty implements Predicate{
 	
 	@Override
 	public void invalidate() {
-		robot.armEmpty = false;
+		//robot.armEmpty = false;
 		
 	}
 
 	@Override
 	public void makeTrue() {
 		robot.armEmpty = true;
+	}
+	
+	@Override
+	public Predicate clone(Map<String, Block> blockMap) {
+		return new ArmEmpty(robot);
 	}
 	
 
@@ -58,12 +66,8 @@ public class ArmEmpty implements Predicate{
 		if (robot == null) {
 			if (other.robot != null)
 				return false;
-		} else if (!robot.equals(other.robot))
+		} else if (!robot.name.equals(other.robot.name))
 			return false;
 		return true;
 	}
-
-	
-	
-	
 }

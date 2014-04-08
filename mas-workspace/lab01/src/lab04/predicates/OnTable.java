@@ -1,5 +1,7 @@
 package lab04.predicates;
 
+import java.util.Map;
+
 import lab04.Block;
 
 public class OnTable implements Predicate {
@@ -27,6 +29,11 @@ public class OnTable implements Predicate {
 	@Override
 	public void makeTrue() {
 		block.setOnTable();
+	}
+	
+	@Override
+	public Predicate clone(Map<String, Block> blockMap) {
+		return new OnTable(blockMap.get(block.name));
 	}
 
 	@Override

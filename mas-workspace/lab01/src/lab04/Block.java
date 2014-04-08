@@ -107,13 +107,11 @@ public class Block {
 		if (above == null) {
 			if (other.above != null)
 				return false;
-		} else if (!above.equals(other.above))
-			return false;
+		} 
 		if (below == null) {
 			if (other.below != null)
 				return false;
-		} else if (!below.equals(other.below))
-			return false;
+		} 
 		if (name == null) {
 			if (other.name != null)
 				return false;

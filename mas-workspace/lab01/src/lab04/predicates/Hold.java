@@ -1,5 +1,7 @@
 package lab04.predicates;
 
+import java.util.Map;
+
 import lab04.Block;
 import lab04.Robot;
 
@@ -30,6 +32,11 @@ public class Hold implements Predicate {
 	@Override
 	public void makeTrue() {
 		robot.setArm(block);
+	}
+	
+	@Override
+	public Predicate clone(Map<String, Block> blockMap) {
+		return new Hold(robot, blockMap.get(block.name));
 	}
 
 	@Override
@@ -64,7 +71,7 @@ public class Hold implements Predicate {
 		if (robot == null) {
 			if (other.robot != null)
 				return false;
-		} else if (!robot.equals(other.robot))
+		} else if (!robot.name.equals(other.robot.name))
 			return false;
 		return true;
 	}

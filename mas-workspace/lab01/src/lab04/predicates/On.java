@@ -1,5 +1,7 @@
 package lab04.predicates;
 
+import java.util.Map;
+
 import lab04.Block;
 
 public class On implements Predicate{
@@ -32,6 +34,11 @@ public class On implements Predicate{
 		above.setOnBlock(below);
 		below.setAboveBlock(above);
 	}
+	
+	@Override
+	public Predicate clone(Map<String, Block> blockMap) {
+		return new On(blockMap.get(above.name), blockMap.get(below.name));
+	}
 
 	@Override
 	public String printInfo() {
@@ -60,12 +67,12 @@ public class On implements Predicate{
 		if (above == null) {
 			if (other.above != null)
 				return false;
-		} else if (!above.equals(other.above))
+		} else if (!above.name.equals(other.above.name))
 			return false;
 		if (below == null) {
 			if (other.below != null)
 				return false;
-		} else if (!below.equals(other.below))
+		} else if (!below.name.equals(other.below.name))
 			return false;
 		return true;
 	}
