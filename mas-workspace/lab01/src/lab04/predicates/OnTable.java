@@ -23,7 +23,6 @@ public class OnTable implements Predicate {
 	@Override
 	public void invalidate() {
 		block.onTable = false;
-		
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public class OnTable implements Predicate {
 		if (block == null) {
 			if (other.block != null)
 				return false;
-		} else if (!block.equals(other.block))
+		} else if (!block.name.equals(other.block.name))
 			return false;
 		return true;
 	}

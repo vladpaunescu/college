@@ -9,6 +9,7 @@ import lab04.operators.PutDown;
 import lab04.operators.StackOp;
 import lab04.operators.Unstack;
 import lab04.predicates.ArmEmpty;
+import lab04.predicates.Clear;
 import lab04.predicates.On;
 import lab04.predicates.OnTable;
 
@@ -33,7 +34,9 @@ public class Planner {
 	}
 
 	private boolean stateForwardSearch(State currentState, List<State> visitedStates, List<ActionState> plan){
-
+		
+		System.out.println(currentState.getStateInfo());
+		
 		if(currentState.satisfies(goalState)){
 			robotPlan = plan;
 			return true;
@@ -42,9 +45,8 @@ public class Planner {
 		List<ActionState> allowedActions = getAllowedActions(currentState);
 
 		for(ActionState actionState : allowedActions){
-			System.out.println(actionState.state.getStateInfo());
 			State newState = actionState.applyAction();
-		//	System.out.println(newState.getStateInfo());
+			//System.out.println(newState.getStateInfo());
 			if(!visitedStates.contains(newState)){
 				List<State> newVisitedStates = new ArrayList<>(visitedStates);
 				newVisitedStates.add(newState);
@@ -170,24 +172,29 @@ public class Planner {
 		addBlock(c1).
 		addBlock(d1);
 
-//		goalState.addPredicate(new On(b1,a1)).
-//		addPredicate(new OnTable(a1)).
-//		addPredicate(new On(c1, b1)).
-//		addPredicate(new On(d1,c1)).
-//		addPredicate(new ArmEmpty(robot1));
+//		goalState.
+//			addPredicate(new On(b1,a1)).
+//			addPredicate(new OnTable(a1)).
+//			addPredicate(new On(c1, b1)).
+//			addPredicate(new On(d1,c1)).
+//			addPredicate(new ArmEmpty(robot1));
+		
 		goalState.
-		addPredicate(new On(a1,c1)).
-		addPredicate(new On(d1,b1)).
-		addPredicate(new OnTable(c1)).
-		addPredicate(new OnTable(b1)).
+		addPredicate(new On(c1,a1)).
+		addPredicate(new On(b1, d1)).
+		addPredicate(new OnTable(a1)).
+		addPredicate(new OnTable(d1)).
 		addPredicate(new ArmEmpty(robot1));
 //		
-//		State mockState = new State();
-//		mockState.addPredicate(new On(c,a)).
-//		addPredicate(new On(b,d)).
-//		addPredicate(new OnTable(a)).
-//		addPredicate(new OnTable(d)).
-//		addPredicate(new ArmEmpty(robot));
+		State mockState = new State();
+		mockState.
+		addPredicate(new Clear(b)).
+		addPredicate(new OnTable(d)).
+		addPredicate(new On(b,d)).
+		addPredicate(new Clear(c)).
+		addPredicate(new OnTable(a)).
+		addPredicate(new On(c, a)).
+		addPredicate(new ArmEmpty(robot));
 
 		System.out.println(initialState.getStateInfo());
 		System.out.println(goalState.getStateInfo());
@@ -196,7 +203,7 @@ public class Planner {
 		planner.initialState = initialState;
 		planner.beliefState = beliefState;
 		planner.goalState = goalState;
-		//System.out.println(mockState.satisfies(goalState));
+		System.out.println(mockState.satisfies(goalState));
 		List<ActionState> ops = planner.plan();
 		System.out.println("Done");
 	}
