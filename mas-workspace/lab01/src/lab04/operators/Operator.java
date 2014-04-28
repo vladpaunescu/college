@@ -37,4 +37,7 @@ public abstract class Operator {
 			addition.makeTrue();
 		}
 	}
+
+	public abstract String printInfo();
+		
 }

@@ -183,13 +183,7 @@ public class State {
 		System.out.println(initialState.getStateInfo());
 	}
 
-	public List<Block> getBlocksOnTable() {
-		List<Block> blocks = new ArrayList<>();
-		for ()
-		
-		return blocks;
-	}
-
+	
 	
 
 	

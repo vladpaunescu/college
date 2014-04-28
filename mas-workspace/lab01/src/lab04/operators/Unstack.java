@@ -10,8 +10,16 @@ import lab04.predicates.On;
 
 public class Unstack extends Operator{
 	
+	private Robot robot;
+	private Block above;
+	private Block below;
+	
 	public Unstack(Robot r, Block x, Block y){
 		super();
+		
+		robot = r;
+		above = x;
+		below = y;
 		
 		//preconditions.add(new Different(x,y));
 		preconditions.add(new On(x, y));
@@ -24,5 +32,15 @@ public class Unstack extends Operator{
 		additions.add(new Hold(r, x));
 		additions.add(new Clear(y));
 		
+	}
+	
+	@Override
+	public String printInfo() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Unstack(").append(robot.name).
+			append(", ").append(above.name).
+			append(", ").append(below.name).
+			append(")");
+		return sb.toString();
 	}
 }

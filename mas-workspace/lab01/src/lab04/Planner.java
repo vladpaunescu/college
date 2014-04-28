@@ -26,8 +26,8 @@ public class Planner {
 		if (stateForwardSearch(beliefState, new ArrayList<State>(), new ArrayList<ActionState>())){
 			System.out.println("Plan succeeded");
 			for(ActionState actionState : robotPlan){
+				System.out.println(actionState.operator.printInfo());
 				System.out.println(actionState.state.getStateInfo());
-				System.out.println(actionState.operator);
 			}
 		}
 		return robotPlan;

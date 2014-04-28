@@ -8,8 +8,14 @@ import lab04.predicates.OnTable;
 
 public class PutDown extends Operator{
 	
+	private Robot robot;
+	private Block block;
+	
 	public PutDown(Robot r, Block x){
 		super();
+		
+		robot = r;
+		block = x;
 		
 		preconditions.add(new Hold(r, x));
 		
@@ -17,5 +23,13 @@ public class PutDown extends Operator{
 		
 		additions.add(new OnTable(x));
 		additions.add(new ArmEmpty(r));
+	}
+	
+	@Override
+	public String printInfo() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PutDown(").append(robot.name).
+			append(", ").append(block.name).append(")");
+		return sb.toString();
 	}
 }
