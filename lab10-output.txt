@@ -1,0 +1,385 @@
+May 06, 2014 12:28:05 AM jade.core.Runtime beginContainer
+INFO: ----------------------------------
+    This is JADE 4.2.0 - revision 6574 of 2012/06/20 15:38:00
+    downloaded in Open Source, under LGPL restrictions,
+    at http://jade.tilab.com/
+----------------------------------------
+Retrieving CommandDispatcher for platform null
+May 06, 2014 12:28:05 AM jade.imtp.leap.LEAPIMTPManager initialize
+INFO: Listening for intra-platform commands on address:
+- jicp://192.168.56.1:1099
+
+May 06, 2014 12:28:06 AM jade.core.BaseService init
+INFO: Service jade.core.management.AgentManagement initialized
+May 06, 2014 12:28:06 AM jade.core.BaseService init
+INFO: Service jade.core.messaging.Messaging initialized
+May 06, 2014 12:28:06 AM jade.core.BaseService init
+INFO: Service jade.core.resource.ResourceManagement initialized
+May 06, 2014 12:28:06 AM jade.core.BaseService init
+INFO: Service jade.core.mobility.AgentMobility initialized
+May 06, 2014 12:28:06 AM jade.core.BaseService init
+INFO: Service jade.core.event.Notification initialized
+May 06, 2014 12:28:10 AM jade.mtp.http.HTTPServer <init>
+INFO: HTTP-MTP Using XML parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+May 06, 2014 12:28:10 AM jade.core.messaging.MessagingService boot
+INFO: MTP addresses:
+http://mobile-pc:7778/acc
+Hello. My name is teacher
+Hello. My name is pupil
+May 06, 2014 12:28:10 AM jade.core.AgentContainerImpl joinPlatform
+INFO: --------------------------------------
+Agent container Main-Container@192.168.56.1 is ready.
+--------------------------------------------
+pupil: Incorrect attemtps 2
+Generated operation 1+4
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "1+4" 
+)
+pupil: Received 1+4
+pupil: Answering 1+4 35
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "35" 
+)
+teacher: Received 35
+Generated operation 7+3
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "7+3" 
+)
+pupil: Received 7+3
+pupil: Answering 7+3 35
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "35" 
+)
+teacher: Received 35
+Generated operation 10/7
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "10/7" 
+)
+pupil: Received 10/7
+pupil: Answering 10/7 1
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "1" 
+)
+teacher: Received 1
+Correct answer
+Generated operation 2*2
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "2*2" 
+)
+pupil: Received 2*2
+pupil: Answering 2*2 4
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "4" 
+)
+teacher: Received 4
+Correct answer
+Generated operation 3/7
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "3/7" 
+)
+pupil: Received 3/7
+pupil: Answering 3/7 0
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "0" 
+)
+teacher: Received 0
+Correct answer
+Generated operation 9*5
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "9*5" 
+)
+pupil: Received 9*5
+pupil: Answering 9*5 45
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "45" 
+)
+teacher: Received 45
+Correct answer
+Generated operation 10*10
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "10*10" 
+)
+pupil: Received 10*10
+pupil: Answering 10*10 100
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "100" 
+)
+teacher: Received 100
+Correct answer
+Generated operation 5-3
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "5-3" 
+)
+pupil: Received 5-3
+pupil: Answering 5-3 2
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "2" 
+)
+teacher: Received 2
+Correct answer
+Generated operation 10-8
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "10-8" 
+)
+pupil: Received 10-8
+pupil: Answering 10-8 2
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "2" 
+)
+teacher: Received 2
+Correct answer
+Generated operation 3-3
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "3-3" 
+)
+pupil: Received 3-3
+pupil: Answering 3-3 0
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "0" 
+)
+teacher: Received 0
+Correct answer
+Generated operation 9*7
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "9*7" 
+)
+pupil: Received 9*7
+pupil: Answering 9*7 63
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "63" 
+)
+teacher: Received 63
+Correct answer
+Generated operation 10+3
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "10+3" 
+)
+pupil: Received 10+3
+pupil: Answering 10+3 13
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "13" 
+)
+teacher: Received 13
+Correct answer
+Generated operation 1*7
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "1*7" 
+)
+pupil: Received 1*7
+pupil: Answering 1*7 7
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "7" 
+)
+teacher: Received 7
+Correct answer
+Generated operation 3*7
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "3*7" 
+)
+pupil: Received 3*7
+pupil: Answering 3*7 21
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "21" 
+)
+teacher: Received 21
+Correct answer
+Generated operation 5+1
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "5+1" 
+)
+pupil: Received 5+1
+pupil: Answering 5+1 6
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "6" 
+)
+teacher: Received 6
+Correct answer
+Generated operation 2/7
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "2/7" 
+)
+pupil: Received 2/7
+pupil: Answering 2/7 0
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "0" 
+)
+teacher: Received 0
+Correct answer
+Generated operation 4/2
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "4/2" 
+)
+pupil: Received 4/2
+pupil: Answering 4/2 2
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "2" 
+)
+teacher: Received 2
+Correct answer
+Generated operation 5/5
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "5/5" 
+)
+pupil: Received 5/5
+pupil: Answering 5/5 1
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "1" 
+)
+teacher: Received 1
+Correct answer
+Generated operation 4+2
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "4+2" 
+)
+pupil: Received 4+2
+pupil: Answering 4+2 6
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "6" 
+)
+teacher: Received 6
+Correct answer
+Generated operation 1+10
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "1+10" 
+)
+pupil: Received 1+10
+pupil: Answering 1+10 11
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "11" 
+)
+teacher: Received 11
+Correct answer
+teacher:Sending results 18
+pupil: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name teacher@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name pupil@192.168.56.1:1099/JADE ) )
+ :content  "A:18" 
+)
+pupil: I answered correctly to 18 answers
+teacher: I receive message.
+(REQUEST
+ :sender  ( agent-identifier :name pupil@192.168.56.1:1099/JADE  :addresses (sequence http://mobile-pc:7778/acc ))
+ :receiver  (set ( agent-identifier :name teacher@192.168.56.1:1099/JADE ) )
+ :content  "Bye" 
+)

@@ -23,18 +23,47 @@ class ResponderBehaviour extends SimpleBehaviour {
 	private static final MessageTemplate mt =
 			MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 	private ACLMessage aclMessage;
+	Operation op;
+	int incorrectAttempts;
+	int attempts = 0;
+	Random r;
 	public ResponderBehaviour(Agent agent) {
 		super(agent);
+		r = new Random();
+		incorrectAttempts = r.nextInt(3);
+		System.out.println(myAgent.getLocalName()+": Incorrect attemtps " + incorrectAttempts);
 	}
 	public void action() {
-		aclMessage = myAgent.receive(mt);
+		aclMessage = myAgent.blockingReceive(mt);
 		if (aclMessage!=null) {
 			System.out.println(myAgent.getLocalName()+": I receive message.\n"+aclMessage);
-			AID r = new AID ("teacher@" + this.myAgent.getHap(), AID.ISGUID);
-			ACLMessage aclMessage = new ACLMessage(ACLMessage.REQUEST);
-			aclMessage.addReceiver(r);
-			aclMessage.setContent("Fine");
-			myAgent.send(aclMessage);
+			if (aclMessage.getContent().lastIndexOf("A:")==-1){
+				op = new Operation(aclMessage.getContent());
+				System.out.println(myAgent.getLocalName()+": Received " + op.expression);
+				int ans = op.result;
+				if(attempts < incorrectAttempts && r.nextInt(2) == 0){
+						attempts++;
+						ans = r.nextInt(100);
+				}
+
+				System.out.println(myAgent.getLocalName()+": Answering " + op.expression + " " + ans);
+
+				AID r = new AID ("teacher@" + this.myAgent.getHap(), AID.ISGUID);
+				ACLMessage aclMessage = new ACLMessage(ACLMessage.REQUEST);
+				aclMessage.addReceiver(r);
+				aclMessage.setContent(ans+"");
+				myAgent.send(aclMessage);
+			} else{
+				String content = aclMessage.getContent();
+				int correctAnswers = Integer.parseInt(content.substring(2));
+				System.out.println(myAgent.getLocalName() +": I answered correctly to " + correctAnswers + " answers");
+
+				AID r = new AID ("teacher@" + this.myAgent.getHap(), AID.ISGUID);
+				ACLMessage aclMessage = new ACLMessage(ACLMessage.REQUEST);
+				aclMessage.addReceiver(r);
+				aclMessage.setContent("Bye");
+				myAgent.send(aclMessage);
+			}
 		} else {
 			this.block();
 		}
