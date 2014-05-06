@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="Jade-1/src"/>
+	<classpathentry kind="src" path="jade-netbeans/src/main/java"/>
+	<classpathentry kind="src" path="lab10/src"/>
+	<classpathentry kind="src" path="mas-workspace/lab01/src"/>
+	<classpathentry kind="lib" path="Jade-1/lib/jade-4.2.jar"/>
+	<classpathentry kind="lib" path="lab10/lib/jade-4.2.jar"/>
+	<classpathentry kind="lib" path="libs/jade-4.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="lab10/bin"/>
+</classpath>
