@@ -41,6 +41,7 @@ public class BookBuyerAgent extends Agent {
 	private List<String> targetBookTitles;
 	// The list of known seller agents
 	private AID[] sellerAgents;
+	private int maximalBudget;
 
 	// Put agent initializations here
 	protected void setup() {
@@ -50,9 +51,10 @@ public class BookBuyerAgent extends Agent {
 		// Get the title of the book to buy as a start-up argument
 		Object[] args = getArguments();
 		targetBookTitles = new ArrayList<>();
+		maximalBudget = (int) args[0];
 		if (args != null && args.length > 0) {
-			for(Object arg: args){
-				targetBookTitles.add((String)arg);
+			for(int i = 1; i < args.length; ++i){
+				targetBookTitles.add((String)args[i]);
 			}
 			//targetBookTitle = (String) args[0];
 			System.out.println("Target book are ");
@@ -61,9 +63,9 @@ public class BookBuyerAgent extends Agent {
 			}
 
 			// Add a TickerBehaviour that schedules a request to seller agents every minute
-			addBehaviour(new TickerBehaviour(this, 60000) {
+			addBehaviour(new TickerBehaviour(this, 20000) {
 				protected void onTick() {
-					System.out.println("Trying to buy "+targetBookTitle);
+					//	System.out.println("Trying to buy "+targetBookTitle);
 					// Update the list of seller agents
 					DFAgentDescription template = new DFAgentDescription();
 					ServiceDescription sd = new ServiceDescription();
@@ -120,10 +122,12 @@ public class BookBuyerAgent extends Agent {
 				for (int i = 0; i < sellerAgents.length; ++i) {
 					cfp.addReceiver(sellerAgents[i]);
 				} 
-				cfp.setContent(targetBookTitle);
-				cfp.setConversationId("book-trade");
-				cfp.setReplyWith("cfp"+System.currentTimeMillis()); // Unique value
-				myAgent.send(cfp);
+				for(String targetBookTitle: targetBookTitles){
+					cfp.setContent(targetBookTitle);
+					cfp.setConversationId("book-trade");
+					cfp.setReplyWith("cfp"+System.currentTimeMillis()); // Unique value
+					myAgent.send(cfp);
+				}
 				// Prepare the template to get proposals
 				mt = MessageTemplate.and(MessageTemplate.MatchConversationId("book-trade"),
 						MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));

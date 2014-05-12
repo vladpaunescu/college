@@ -36,14 +36,14 @@ import java.util.*;
 
 public class BookSellerAgent extends Agent {
 	// The catalogue of books for sale (maps the title of a book to its price)
-	private Hashtable catalogue;
+	private Hashtable<String, List<Integer>> catalogue;
 	// The GUI by means of which the user can add books in the catalogue
 	private BookSellerGui myGui;
 
 	// Put agent initializations here
 	protected void setup() {
 		// Create the catalogue
-		catalogue = new Hashtable();
+		catalogue = new Hashtable<>();
 
 		// Create and show the GUI 
 		myGui = new BookSellerGui(this);
@@ -88,11 +88,14 @@ public class BookSellerAgent extends Agent {
 	/**
      This is invoked by the GUI when the user adds a new book for sale
 	 */
-	public void updateCatalogue(final String title, final int price) {
+	public void updateCatalogue(final String title, final int price, final int secondPrice) {
 		addBehaviour(new OneShotBehaviour() {
 			public void action() {
-				catalogue.put(title, new Integer(price));
-				System.out.println(title+" inserted into catalogue. Price = "+price);
+				List<Integer> prices = new ArrayList<>();
+				prices.add(price);
+				prices.add(secondPrice);
+				catalogue.put(title, prices);
+				System.out.println(title+" inserted into catalogue. Price = "+price + " " + secondPrice);
 			}
 		} );
 	}
@@ -114,11 +117,11 @@ public class BookSellerAgent extends Agent {
 				String title = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
-				Integer price = (Integer) catalogue.get(title);
+				Integer price = catalogue.get(title).get(0);
 				if (price != null) {
 					// The requested book is available for sale. Reply with the price
 					reply.setPerformative(ACLMessage.PROPOSE);
-					reply.setContent(String.valueOf(price.intValue()));
+					reply.setContent(String.valueOf(price.intValue()) + ":" + title);
 				}
 				else {
 					// The requested book is NOT available for sale.
@@ -150,7 +153,7 @@ public class BookSellerAgent extends Agent {
 				String title = msg.getContent();
 				ACLMessage reply = msg.createReply();
 
-				Integer price = (Integer) catalogue.remove(title);
+				Integer price = (Integer) catalogue.remove(title).get(0);
 				if (price != null) {
 					reply.setPerformative(ACLMessage.INFORM);
 					System.out.println(title+" sold to agent "+msg.getSender().getName());
