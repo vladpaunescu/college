@@ -68,6 +68,9 @@ public class BookSellerAgent extends Agent {
 
 		// Add the behaviour serving purchase orders from buyer agents
 		addBehaviour(new PurchaseOrdersServer());
+		
+		// add behaviour for second price offer
+		addBehaviour(new SecondOfferRequestsServer());
 	}
 
 	// Put agent clean-up operations here
@@ -121,7 +124,7 @@ public class BookSellerAgent extends Agent {
 				if (price != null) {
 					// The requested book is available for sale. Reply with the price
 					reply.setPerformative(ACLMessage.PROPOSE);
-					reply.setContent(String.valueOf(price.intValue()) + ":" + title);
+					reply.setContent(String.valueOf(title + ":" + price.intValue()));
 				}
 				else {
 					// The requested book is NOT available for sale.
@@ -135,6 +138,35 @@ public class BookSellerAgent extends Agent {
 			}
 		}
 	}  // End of inner class OfferRequestsServer
+	
+	private class SecondOfferRequestsServer extends CyclicBehaviour{
+		public void action() {
+			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL);
+			ACLMessage msg = myAgent.receive(mt);
+			if (msg != null) {
+				// CFP Message received. Process it
+				String title = msg.getContent();
+				ACLMessage reply = msg.createReply();
+				
+				// send second price
+				Integer price = catalogue.get(title).get(1);
+				if (price != null) {
+					// The requested book is available for sale. Reply with the price
+					reply.setPerformative(ACLMessage.PROPOSE);
+					reply.setContent(String.valueOf(title + ":" + price.intValue()));
+				}
+				else {
+					// The requested book is NOT available for sale.
+					reply.setPerformative(ACLMessage.REFUSE);
+					reply.setContent("not-available");
+				}
+				myAgent.send(reply);
+			}
+			else {
+				block();
+			}
+		}
+	}
 
 	/**
 	   Inner class PurchaseOrdersServer.

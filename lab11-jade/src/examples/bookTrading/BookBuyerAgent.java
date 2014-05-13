@@ -24,7 +24,9 @@ Boston, MA  02111-1307, USA.
 package examples.bookTrading;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jade.core.Agent;
 import jade.core.AID;
@@ -51,7 +53,8 @@ public class BookBuyerAgent extends Agent {
 		// Get the title of the book to buy as a start-up argument
 		Object[] args = getArguments();
 		targetBookTitles = new ArrayList<>();
-		maximalBudget = (int) args[0];
+		maximalBudget = Integer.parseInt((String) args[0]);
+		System.out.println("Maximal budget is " + maximalBudget);
 		if (args != null && args.length > 0) {
 			for(int i = 1; i < args.length; ++i){
 				targetBookTitles.add((String)args[i]);
@@ -63,7 +66,7 @@ public class BookBuyerAgent extends Agent {
 			}
 
 			// Add a TickerBehaviour that schedules a request to seller agents every minute
-			addBehaviour(new TickerBehaviour(this, 20000) {
+			addBehaviour(new TickerBehaviour(this, 1000) {
 				protected void onTick() {
 					//	System.out.println("Trying to buy "+targetBookTitle);
 					// Update the list of seller agents
@@ -113,6 +116,22 @@ public class BookBuyerAgent extends Agent {
 		private int repliesCnt = 0; // The counter of replies from seller agents
 		private MessageTemplate mt; // The template to receive replies
 		private int step = 0;
+		private Map<String, Integer> bestPrices;
+		private Map<String, AID> bestSellers;
+		private Map<String , Integer> states;
+		private boolean secondPrice;
+
+		public RequestPerformer(){
+			super();
+			bestPrices = new HashMap<>();
+			for(String book : targetBookTitles){
+				bestPrices.put(book, Integer.MAX_VALUE);
+			}
+			bestSellers = new HashMap<>();
+			states = new HashMap<>();
+			secondPrice = false;
+
+		}
 
 		public void action() {
 			switch (step) {
@@ -139,18 +158,31 @@ public class BookBuyerAgent extends Agent {
 				if (reply != null) {
 					// Reply received
 					if (reply.getPerformative() == ACLMessage.PROPOSE) {
+						System.out.println("Reply " + reply.getContent());
+						String tokens[] = reply.getContent().split(":");
+						String bookTitle = tokens[0];
 						// This is an offer 
-						int price = Integer.parseInt(reply.getContent());
-						if (bestSeller == null || price < bestPrice) {
+						int price = Integer.parseInt(tokens[1]);
+						if (bestSellers.get(bookTitle) == null || price < bestPrices.get(bookTitle)) {
 							// This is the best offer at present
-							bestPrice = price;
-							bestSeller = reply.getSender();
+							bestPrices.put(bookTitle, price);
+							bestSellers.put(bookTitle, reply.getSender());
 						}
 					}
 					repliesCnt++;
-					if (repliesCnt >= 3){// sellerAgents.length) {
+					if (repliesCnt >= sellerAgents.length * targetBookTitles.size()) {
 						// We received all replies
+						System.out.println("We received all replies");
 						step = 2; 
+						repliesCnt = 0;
+					}
+					System.out.println("Best prices so far are");
+					for(Map.Entry<String, AID> bestSeller : bestSellers.entrySet()){
+						int price = bestPrices.get(bestSeller.getKey());
+						System.out.println(bestSeller.getKey() + " " + price);
+						if (price > maximalBudget){
+							System.out.println("Price > maximal budget " + maximalBudget);
+						}
 					}
 				}
 				else {
@@ -158,47 +190,102 @@ public class BookBuyerAgent extends Agent {
 				}
 				break;
 			case 2:
-				// Send the purchase order to the seller that provided the best offer
-				ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-				order.addReceiver(bestSeller);
-				order.setContent(targetBookTitle);
-				order.setConversationId("book-trade");
-				order.setReplyWith("order"+System.currentTimeMillis());
-				myAgent.send(order);
-				// Prepare the template to get the purchase order reply
-				mt = MessageTemplate.and(MessageTemplate.MatchConversationId("book-trade"),
-						MessageTemplate.MatchInReplyTo(order.getReplyWith()));
-				step = 3;
+				System.out.println("Stage 2");
+				for(Map.Entry<String, AID> bestSeller : bestSellers.entrySet()){
+					int price = bestPrices.get(bestSeller.getKey());
+					if (price < maximalBudget){
+						System.out.println("Prie " + price + " is < maximal budget " + maximalBudget);
+						// Send the purchase order to the seller that provided the best offer
+						ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+						order.addReceiver(bestSeller.getValue());
+						order.setContent(bestSeller.getKey());
+						order.setConversationId("book-trade");
+						order.setReplyWith("order"+System.currentTimeMillis());
+						myAgent.send(order);
+						// Prepare the template to get the purchase order reply
+						mt = MessageTemplate.and(MessageTemplate.MatchConversationId("book-trade"),
+								MessageTemplate.MatchInReplyTo(order.getReplyWith()));
+						states.put(bestSeller.getKey(), 1);
+					} else if (!secondPrice){
+						// Send deny to all sellers
+						System.out.println("Request second prie to all sellers");
+						ACLMessage order = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+						for (int i = 0; i < sellerAgents.length; ++i) {
+							order.addReceiver(sellerAgents[i]);
+						} 
+						order.setContent(bestSeller.getKey());
+						order.setConversationId("book-trade");
+						order.setReplyWith("order"+System.currentTimeMillis());
+						myAgent.send(order);
+						// Prepare the template to get the purchase order reply
+						mt = MessageTemplate.and(MessageTemplate.MatchConversationId("book-trade"),
+								MessageTemplate.MatchInReplyTo(order.getReplyWith()));
+						states.put(bestSeller.getKey(), 0);
+					}
+				}
+				if (repliesCnt >= sellerAgents.length * targetBookTitles.size()) {
+					// We received all replies
+					System.out.println("Received all replies");
+					step = 3;
+					repliesCnt = 0;
+				}
 				break;
 			case 3:      
 				// Receive the purchase order reply
-				reply = myAgent.receive(mt);
-				if (reply != null) {
-					// Purchase order reply received
-					if (reply.getPerformative() == ACLMessage.INFORM) {
-						// Purchase successful. We can terminate
-						System.out.println(targetBookTitle+" successfully purchased from agent "+reply.getSender().getName());
-						System.out.println("Price = "+bestPrice);
-						myAgent.doDelete();
-					}
-					else {
-						System.out.println("Attempt failed: requested book already sold.");
-					}
+				for(Map.Entry<String, AID> bestSeller : bestSellers.entrySet()){
+					String book = bestSeller.getKey();
+					reply = myAgent.receive(mt);
+					if (states.get(book) == 1){
+						if (reply != null) {
+							// Purchase order reply received
+							if (reply.getPerformative() == ACLMessage.INFORM) {
+								// Purchase successful. We can terminate
+								System.out.println(book+" successfully purchased from agent "+reply.getSender().getName());
+								System.out.println("Price = "+bestPrices.get(book));
+								myAgent.doDelete();
+							}
+							else {
+								System.out.println("Attempt failed: requested book already sold.");
+							}
 
-					step = 4;
-				}
-				else {
-					block();
+							step = 4;
+						}
+						else {
+							block();
+						}
+					} else if(!secondPrice && reply != null){
+						// need to get second price
+						// Reply received
+						if (reply.getPerformative() == ACLMessage.PROPOSE) {
+							System.out.println("Reply " + reply.getContent());
+							String tokens[] = reply.getContent().split(":");
+							String bookTitle = tokens[0];
+							// This is an offer 
+							int price = Integer.parseInt(tokens[1]);
+							if (bestSellers.get(bookTitle) == null || price < bestPrices.get(bookTitle)) {
+								// This is the best offer at present
+								bestPrices.put(bookTitle, price);
+								bestSellers.put(bookTitle, reply.getSender());
+							}
+							repliesCnt++;
+							if (repliesCnt >= sellerAgents.length * targetBookTitles.size()) {
+								// We received all replies
+								step = 2;
+								secondPrice = true;
+							}
+						}
+					}
 				}
 				break;
+
 			}        
 		}
 
 		public boolean done() {
-			if (step == 2 && bestSeller == null) {
-				System.out.println("Attempt failed: "+targetBookTitle+" not available for sale");
-			}
-			return ((step == 2 && bestSeller == null) || step == 4);
+//			if (step == 2 && bestSeller == null) {
+//				System.out.println("Attempt failed: "+targetBookTitle+" not available for sale");
+//			}
+			return (step == 4);
 		}
 	}  // End of inner class RequestPerformer
 }
