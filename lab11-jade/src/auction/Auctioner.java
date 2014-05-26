@@ -12,13 +12,16 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public class Auctioner extends Agent {
 
 	private AID[] bidders;
 	private int startingPrice;
 	private AID bestBidder;
-	int recv = 0;
+	boolean finish[] = new boolean[2];
+	Semaphore sempahore = new Semaphore(1);
+	Semaphore done = new Semaphore(0);
 
 	// Put agent initializations here
 	protected void setup() {
@@ -39,8 +42,8 @@ public class Auctioner extends Agent {
 		catch (FIPAException fe) {
 			fe.printStackTrace();
 		}
-		
-		
+
+
 		// Update the list of bidder agents
 		DFAgentDescription template = new DFAgentDescription();
 		ServiceDescription sd1 = new ServiceDescription();
@@ -59,17 +62,20 @@ public class Auctioner extends Agent {
 			fe.printStackTrace();
 		}
 
-//		// Send the cfp to all sellers
-//		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-//		for (int i = 0; i < bidders.length; ++i) {
-//			cfp.addReceiver(bidders[i]);
-//		}
-//		cfp.setContent(String.valueOf(startingPrice));
-//		send(cfp);
+		//		// Send the cfp to all sellers
+		//		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
+		//		for (int i = 0; i < bidders.length; ++i) {
+		//			cfp.addReceiver(bidders[i]);
+		//		}
+		//		cfp.setContent(String.valueOf(startingPrice));
+		//		send(cfp);
 
 		// Add the behaviour serving queries from buyer agents
 		addBehaviour(new OfferRequestsServer());
 		addBehaviour(new BidRequestServer());
+
+
+		System.out.println("Bidding done");
 
 
 	}
@@ -83,22 +89,12 @@ public class Auctioner extends Agent {
 		catch (FIPAException fe) {
 			fe.printStackTrace();
 		}
-	
+
 		System.out.println("Seller-agent "+getAID().getName()+" terminating.");
 	}
 
-
-
-	/**
-	   Inner class OfferRequestsServer.
-	   This is the behaviour used by Book-seller agents to serve incoming requests 
-	   for offer from buyer agents.
-	   If the requested book is in the local catalogue the seller agent replies 
-	   with a PROPOSE message specifying the price. Otherwise a REFUSE message is
-	   sent back.
-	 */
-	private class OfferRequestsServer extends CyclicBehaviour {
-		
+	private class OfferRequestsServer extends Behaviour {
+		//	boolean done = false;
 		public void action() {
 			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
 			ACLMessage msg = myAgent.receive(mt);
@@ -115,26 +111,32 @@ public class Auctioner extends Agent {
 						bestBidder = msg.getSender();
 					}
 				}
-			//	myAgent.send(reply);
+				//	myAgent.send(reply);
 			}
 			else {
-				synchronized (myAgent) {
-					System.out.println("No response in beh1");
-					recv++;
-				}
-				if(recv == 2){
-					System.out.println("Item sold");
-				}
-				block();
-				System.out.println("Resetting recv in behaviour1");
-				recv = 0;
+					if(!sempahore.tryAcquire()){
+						System.out.println("Finish 1");
+						done.release();
+
+					}else {
+						System.out.println("wait 1");
+						block();
+						System.out.println("Release 1");
+						sempahore.release();
+					}
 			}
 		}
+
+		public boolean done() {
+			return false;
+		}
+
+
 	}  // End of inner class OfferRequestsServer
-	
-	
-	private class BidRequestServer extends CyclicBehaviour {
-		
+
+
+	private class BidRequestServer extends Behaviour {
+		//boolean done = false;
 		public void action() {
 			System.out.println("Processing price request from bidder");
 			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
@@ -149,22 +151,27 @@ public class Auctioner extends Agent {
 				}
 				myAgent.send(reply);
 			}
-			else {
-				synchronized (myAgent) {
-					System.out.println("No response in beh2");
-					recv++;
-				}
-				if(recv == 2){
-					System.out.println("Item sold");
-				}
-				block();
-				System.out.println("Resetting recv in behaviour2");
-				recv = 0;
+			else { 
+					if(!sempahore.tryAcquire()){
+						System.out.println("Finish 2");
+						done.release();
+					} else {
+						System.out.println("wait 2");
+						block();
+						System.out.println("Release 2");
+						sempahore.release();
+					}
 			}
 		}
-	}  // End of inner class OfferRequestsServer
-	
-	
 
-	
+
+		// End of inner class OfferRequestsServer
+
+		public boolean done() {
+			return false;
+		}
+	}
+
+
+
 }
